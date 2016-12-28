@@ -27,6 +27,10 @@ type Err struct {
 	Code    ErrCode
 }
 
+func (e *Err) Error() string {
+	return fmt.Sprintf("%v %v %v", e.Code, e.Org, e.UserMsg)
+}
+
 // New returns a new Err
 func New(msg string, err error, code ErrCode) *Err {
 	return &Err{Org: err, UserMsg: msg, Code: code}

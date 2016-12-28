@@ -14,7 +14,7 @@ import (
 )
 
 // Serve will serve http based on config and routes
-func Serve(con config.Server, routes http.Handler) error {
+func Serve(con *config.Server, routes http.Handler) error {
 	if con.Port == "" {
 		return fmt.Errorf("%v is required, quitting", con.Prefix+"_SERVER_PORT")
 	}
@@ -25,7 +25,7 @@ func Serve(con config.Server, routes http.Handler) error {
 }
 
 // ConfigLog will setup a log if configured
-func ConfigLog(con config.Server) (*os.File, error) {
+func ConfigLog(con *config.Server) (*os.File, error) {
 	// Verbose logging with file name and line number
 	log.SetFlags(log.LstdFlags)
 	if con.Log != "" {

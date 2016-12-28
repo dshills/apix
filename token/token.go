@@ -15,7 +15,7 @@ func SetSecret(key []byte) {
 }
 
 // Config sets the JWT secret
-func Config(con config.Server) error {
+func Config(con *config.Server) error {
 	if con.JWTKey == "" {
 		return fmt.Errorf("%v is required, quitting", con.Prefix+"_JWT_KEY")
 	}

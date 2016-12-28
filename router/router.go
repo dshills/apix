@@ -1,6 +1,7 @@
-package route
+package router
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -62,8 +63,8 @@ func WrapHandler(h http.Handler) http.HandlerFunc {
 	}
 }
 
-// NotFound handles a 404 Not Found request
-func NotFound(w http.ResponseWriter, r *http.Request) {
-	ierr := ierror.New("", nil, 404)
+// NotFoundHandler handles a 404 Not Found request
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	ierr := ierror.New("", fmt.Errorf("Page not found 404"), 404)
 	ierr.Write(w, r)
 }
