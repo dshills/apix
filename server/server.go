@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"github.com/dshills/apix/config"
-	"github.com/dshills/apix/ierror"
+	"github.com/dshills/apix/errorx"
 )
 
 // Serve will serve http based on config and routes
@@ -39,12 +39,28 @@ func ConfigLog(con *config.Server) (*os.File, error) {
 	return nil, nil
 }
 
-func getJSONBody(r *http.Request, i interface{}) *ierror.Err {
+// GetJSONBody will unmarshal a json http body
+func GetJSONBody(r *http.Request, i interface{}) *errorx.Err {
 	buf := new(bytes.Buffer)
 	io.Copy(buf, r.Body)
 	r.Body.Close()
 	if err := json.Unmarshal(buf.Bytes(), i); err != nil {
-		return ierror.New("Failed to decode json", err, ierror.BadRequestError)
+		return errorx.New("Failed to decode json", err, errorx.BadRequest)
 	}
 	return nil
+}
+
+// SendJSON sends data in i as JSON
+func SendJSON(w http.ResponseWriter, r *http.Request, i interface{}) {
+	if i == nil {
+		errorx.New("No data to send", fmt.Errorf("interface is nil"), errorx.InternalServerError).Write(w, r)
+		return
+	}
+	b, err := json.Marshal(&i)
+	if ierr := errorx.NewIfErr("Failed to create json", err, errorx.InternalServerError); ierr != nil {
+		ierr.Write(w, r)
+		return
+	}
+	w.Header().Set("Content-Type", "application/javascript")
+	fmt.Fprint(w, string(b))
 }

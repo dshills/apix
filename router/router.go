@@ -1,12 +1,10 @@
 package router
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/bouk/httprouter"
-	"github.com/dshills/apix/ierror"
 	"github.com/dshills/apix/token"
 )
 
@@ -65,6 +63,5 @@ func WrapHandler(h http.Handler) http.HandlerFunc {
 
 // NotFoundHandler handles a 404 Not Found request
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-	ierr := ierror.New("", fmt.Errorf("Page not found 404"), 404)
-	ierr.Write(w, r)
+	http.Error(w, "Not found", http.StatusNotFound)
 }
